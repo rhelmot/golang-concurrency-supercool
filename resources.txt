@@ -1,0 +1,9 @@
+Resources for learning Go:
+
+https://tour.golang.org/
+
+https://golang.org/doc/codewalk/sharemem/
+
+https://www.youtube.com/watch?v=QDDwwePbDtw
+
+https://www.youtube.com/watch?v=f6kdp27TYZs
