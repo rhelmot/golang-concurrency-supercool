@@ -39,7 +39,8 @@ A blog post explaining how to get live debugging information from the
 runtime while running a Go program. It allows you to configure the number
 of processors to run the program on and allows you to see how many threads
 exist, how many threads are idle, how many processors are idle out of the
-total processors that the program is allowed to use, and the number of goroutines in the global and local run queues.
+total processors that the program is allowed to use, and the number of
+goroutines in the global and local run queues.
 
 It also explains a bit about the runtime scheduler.
 
