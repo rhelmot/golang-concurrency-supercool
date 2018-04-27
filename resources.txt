@@ -21,11 +21,14 @@ Documentation for go assembly, which is used in the runtime.
 
 https://blog.altoros.com/golang-part-1-main-concepts-and-project-structure.html
 
-A five-part series of blog posts describing how Go compilation and execution work.
+A five-part series of blog posts describing how Go compilation and
+execution work.
 
 http://www.cs.columbia.edu/~aho/cs6998/reports/12-12-11_DeshpandeSponslerWeiss_GO.pdf
 
-A scholarly paper analyzing the Go runtime scheduler (which determines what goroutines run and when). It does not seem to have ever been formally published. It's six years old, so the information is almost guaranteed to
+A scholarly paper analyzing the Go runtime scheduler (which determines
+what goroutines run and when). It does not seem to have ever been formally
+published. It's six years old, so the information is almost guaranteed to
 be out of date, but it should give some valuable background information
 about Go's initial approach to handling scheduling concurrent goroutines
 and how that approach has changed over the years.
