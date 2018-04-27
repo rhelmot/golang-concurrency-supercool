@@ -7,3 +7,49 @@ https://golang.org/doc/codewalk/sharemem/
 https://www.youtube.com/watch?v=QDDwwePbDtw
 
 https://www.youtube.com/watch?v=f6kdp27TYZs
+
+
+Resources for learning about the Go runtime:
+
+https://github.com/golang/go/tree/master/src/runtime
+
+Source code for the Go runtime.
+
+https://golang.org/doc/asm
+
+Documentation for go assembly, which is used in the runtime.
+
+https://blog.altoros.com/golang-part-1-main-concepts-and-project-structure.html
+
+A five-part series of blog posts describing how Go compilation and execution work.
+
+http://www.cs.columbia.edu/~aho/cs6998/reports/12-12-11_DeshpandeSponslerWeiss_GO.pdf
+
+A scholarly paper analyzing the Go runtime scheduler (which determines what goroutines run and when). It does not seem to have ever been formally published. It's six years old, so the information is almost guaranteed to
+be out of date, but it should give some valuable background information
+about Go's initial approach to handling scheduling concurrent goroutines
+and how that approach has changed over the years.
+
+https://www.ardanlabs.com/blog/2015/02/scheduler-tracing-in-go.html
+
+A blog post explaining how to get live debugging information from the
+runtime while running a Go program. It allows you to configure the number
+of processors to run the program on and allows you to see how many threads
+exist, how many threads are idle, how many processors are idle out of the
+total processors that the program is allowed to use, and the number of goroutines in the global and local run queues.
+
+It also explains a bit about the runtime scheduler.
+
+https://rakyll.org/scheduler/
+
+An additional, more recent blog post about how the scheduler works.
+
+https://morsmachine.dk/go-scheduler
+
+Another blog post about the scheduler from 2013.
+
+https://morsmachine.dk/causalprof
+
+A Go implementation of a profiling algorithm. This could be useful
+for analyzing the effects of concurrency on program performance later
+on.
