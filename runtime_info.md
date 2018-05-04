@@ -34,7 +34,7 @@ Instead, they are placed into a free pool for that specific type.
 
 | Name | Description  | Stack |
 |------|--------------|-------|
-| G    | Goroutine    |  Dynamically growing/shrinking user stack     |
+| G    | Goroutine    |  Dynamically growing/shrinking user stack (used for the execution of the Go code itself)     |
 | M    | OS thread   |  Fixed-size system stack (and signal stack on Unix) |
 | P | CPU resource | N/A |
 
@@ -46,4 +46,27 @@ M source code: https://github.com/golang/go/blob/5dd978a283ca445f8b5f255773b3904
 
 P source code: https://github.com/golang/go/blob/5dd978a283ca445f8b5f255773b3904497365b61/src/runtime/runtime2.go#L470
 
+### Behavior
 
+The Go scheduler is [partially pre-emptive](https://github.com/golang/go/issues/11462) and work-stealing.
+
+Every P has a queue of goroutines that are ready to be run.
+There is also a global queue of goroutines.
+If a P runs out of work, it will first look in the global queue.
+If the global queue is empty, it will then try to steal work from another P.
+
+An M must own a P in order to execute user Go code.
+When M is not executing user code, e.g. when it is performing a syscall, it does not need a P and therefore will release it.
+When the M wants to resume executing user code, it will need to reaquire a P.
+
+A goroutine can yeild to another goroutine by calling `runtime.Gosched()`.
+
+### Settings
+
+The number of P can be set at execution time with the GOMAXPROCS variable. e.g.:
+
+>GOMAXPROCS=4 ./test
+
+Or, inside the code itself:
+
+> runtime.GOMAXPROCS(4)
