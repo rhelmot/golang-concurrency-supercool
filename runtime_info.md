@@ -9,4 +9,17 @@ The source for the runtime can be found at https://github.com/golang/go/tree/mas
 A Go package for interacting with the runtime can be found at https://golang.org/pkg/runtime/.
 
 
+## Getting Runtime Information From Running Programs
+
+In order to get debugging information from the runtime, we set the GODEBUG variable when launching the program.
+For example, `GODEBUG=schedtrace=1000 ./test` will print information once every 1000 milliseconds about how the scheduler is performing.
+(How many processors are idle, how many goroutines are queued for each processor, etc.)
+
+
+Setting `scheddetail` to a number of milliseconds will print more detailed information.
+For it to work, `schedtrace` must also be set.
+(Example: `GOMAXPROCS=2 GODEBUG=schedtrace=1000,scheddetail=1000 ./test`)
+
+More information about the GODEBUG variable can be found at https://golang.org/pkg/runtime/.
+
 
