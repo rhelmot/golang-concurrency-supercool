@@ -70,3 +70,34 @@ The number of P can be set at execution time with the GOMAXPROCS variable. e.g.:
 Or, inside the code itself:
 
 > runtime.GOMAXPROCS(4)
+
+## Memory Management
+
+### Allocation
+
+Allocator source: https://github.com/golang/go/blob/5dd978a283ca445f8b5f255773b3904497365b61/src/runtime/malloc.go#L550
+
+Memory allocation works differently for small and large objects.
+
+#### Small objects
+
+Go has a set of size classes, defined [here](https://github.com/golang/go/blob/7ee43faf78f3b0c97c315c28f13dd802047af0c8/src/runtime/mksizeclasses.go).
+Every P has a cache of mspans: spans of pages which are themselves split into segments of a given size class.
+Within each mspan, a bitmap is used to mark which segments are free and which have been allocated.
+When a small object is allocated, Go takes the smallest size class that can fit the object and looks at the bitmap for its mspan to see if there is free memory of that size.
+If so, that memory is allocated.
+If not, the allocator gives the P a new mspan for that size, then allocates from there.
+
+This method of allocation reduces fragmentation (which is important, because the garbage collector is non-compacting).
+
+#### Large Objects
+
+Source code for allocation of large objects: https://github.com/golang/go/blob/5dd978a283ca445f8b5f255773b3904497365b61/src/runtime/malloc.go#L779
+
+Large objects are allocated directly from the heap.
+
+### Garbage Collection
+
+Go's garbage collector is concurrent mark-sweep with a write barrier. 
+
+Garbage collector source: https://github.com/golang/go/blob/5dd978a283ca445f8b5f255773b3904497365b61/src/runtime/mgc.go
