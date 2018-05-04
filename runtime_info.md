@@ -22,4 +22,21 @@ For it to work, `schedtrace` must also be set.
 
 More information about the GODEBUG variable can be found at https://golang.org/pkg/runtime/.
 
+## Scheduler
+
+### Structures
+
+All structures are heap-allocated.
+These data structures are *never* freed.
+Instead, they are placed into a free pool for that specific type.
+
+| Name | Description  | Stack |
+|------|--------------|-------|
+| G    | Goroutine    |  Dynamically growing/shrinking user stack     |
+| M    | OS thread   |  Fixed-size system stack (and signal stack on Unix) |
+| P | CPU resource | N/A |
+
+
+(Source: https://github.com/golang/go/blob/master/src/runtime/HACKING.md)
+
 
