@@ -24,6 +24,8 @@ More information about the GODEBUG variable can be found at https://golang.org/p
 
 ## Scheduler
 
+Source code: https://github.com/golang/go/blob/4d7cf3fedbc382215df5ff6167ee9782a9cc9375/src/runtime/proc.go
+
 ### Structures
 
 All structures are heap-allocated.
@@ -36,7 +38,12 @@ Instead, they are placed into a free pool for that specific type.
 | M    | OS thread   |  Fixed-size system stack (and signal stack on Unix) |
 | P | CPU resource | N/A |
 
-
 (Source: https://github.com/golang/go/blob/master/src/runtime/HACKING.md)
+
+G source code: https://github.com/golang/go/blob/5dd978a283ca445f8b5f255773b3904497365b61/src/runtime/runtime2.go#L332
+
+M source code: https://github.com/golang/go/blob/5dd978a283ca445f8b5f255773b3904497365b61/src/runtime/runtime2.go#L403
+
+P source code: https://github.com/golang/go/blob/5dd978a283ca445f8b5f255773b3904497365b61/src/runtime/runtime2.go#L470
 
 
