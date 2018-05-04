@@ -1,6 +1,6 @@
-#Write-up for the Go runtime
+# Write-up for the Go runtime
 
-##Basics
+## Basics
 
 Unlike languages like Java, Go's runtime does *not* involve a virtual machine.
 In this case, 'runtime' just refers to a library that implements features of the language like garbage collection and concurrency.
