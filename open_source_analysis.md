@@ -28,6 +28,7 @@ Uses of concurrency in Gin:
 A program for continuously synchronizing files between multiple machines.
 
 Uses of concurrency in Syncthing:
+
 * To asynchronously update a database
 * To separate tasks through use of channels, e.g. separating scanning a list of paths from collecting the path names
 * To limit the amount of a certain task that can run concurrently by using channels
@@ -37,3 +38,16 @@ Uses of concurrency in Syncthing:
 * To receive packets without blocking the main thread
 * To detect deadlocks
 
+### CockroachDB
+
+A scalable SQL database.
+
+Uses of concurrency in Cockroach.db:
+
+* In test, to simulate multiple concurrent edits
+* To initiate logging without blocking the main thread
+* To run tasks asynchronously and limit the number of tasks through a semaphore channel
+* To set a timeout for a function
+* To wait for a function to return and run cleanup for it without blocking the main thread
+* To serve multiple network connections concurrently
+* To run one of a certain function for every processor
