@@ -65,3 +65,36 @@ Uses of concurrency in Hugo:
 * To initiate logging without blocking the main thread
 * To set a timeout for a function
 
+## Primitive
+
+A program that reproduces images with geometric primitives.
+Utilizes very little concurrency.
+
+Uses of concurrency in Primitive:
+
+* To run multiple workers concurrently
+
+### GoTTY
+
+Allows you to run terminal commands as web applications.
+
+Uses of concurrency in GoTTY:
+
+* To wait for error signals from a running server
+* To wait for a function to return and run cleanup for it without blocking the main thread
+* To run a server without blocking the main thread
+* To wait for an anonymous function to complete or give an error
+* To set a timeout for a function
+* To allow an object's run function to run concurrently with the main thread
+
+### Micro
+
+A text editor.
+
+Uses of concurrency in Micro:
+
+* To run a command without blocking the main thread
+* To separate tasks through use of channels
+* To do IO without blocking the main thread
+* To do multiple queries concurrently
+* To set a timeout for a function
