@@ -98,3 +98,50 @@ Uses of concurrency in Micro:
 * To do IO without blocking the main thread
 * To do multiple queries concurrently
 * To set a timeout for a function
+
+### gogs
+
+A git server, effectively a clone of github.
+
+Uses of concurrency in gogs:
+
+* To do CPU-bound tasks in parallel
+* To architect a data pipeline as a series of goroutines piping data through channels
+* To dispatch callbacks with no deadline
+* To implement generators
+* To parallelize I/O-bound tasks with no order requirement
+* To dispatch an I/O task in a time-sensitive code path
+* To provide separation of concerns, abstracting behavior using channels as signals instead of copying the relevant code to the channel-write site
+
+### beego
+
+A web server.
+
+Uses of concurrency in beego:
+
+* To perform a task with no deadline, a la setTimeout(0)
+* To translate a function return event (Wait()) into a channel, to let a consumer choose when to block, a la await
+* To dispatch callbacks with no deadline
+* To perform I/O (with no deadline) without blocking the main thread
+
+### fzf
+
+A "fuzzy finder", designed to do text filtering with maximum efficiency.
+
+Uses of concurrency in fzf:
+
+* To do CPU-bound tasks in parallel
+* To handle asynchronously submitted tasks
+* To respond to an async message on a channel
+* To perform an action after a timeout, a la setTimeout
+* To perform an action at a certain interval, a la setInterval
+* In a test function, for code clarity, to separate an event consumer and producer
+
+## Summary
+
+Most programs use concurrency for modeling concurrent events.
+Go's accessable concurrency tools let you treat real aspects of concurrent behavior in your problem with real concurrency, which largely improves code maintainability.
+The performance concerns, then, are largely about the latency and bandwidth of the concurrency and communication mechanisms.
+Is it ever a problem to use the goroutine system as an event queueing mechanism?
+What is the overhead of using goroutines for I/O- or CPU-bound parallelism as opposed to pthreads?
+These are questions we should answer with our benchmarks.
