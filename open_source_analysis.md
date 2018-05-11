@@ -51,3 +51,17 @@ Uses of concurrency in Cockroach.db:
 * To wait for a function to return and run cleanup for it without blocking the main thread
 * To serve multiple network connections concurrently
 * To run one of a certain function for every processor
+
+### Hugo
+
+A framework for rendering static websites.
+
+Uses of concurrency in Hugo:
+
+* To allow an object's run function to run concurrently with the main thread
+* To render multiple pages concurrently
+* To separate tasks through use of channels, e.g. separating error collecting from the function that produces the errors
+* Run multiple web services at the same time
+* To initiate logging without blocking the main thread
+* To set a timeout for a function
+
