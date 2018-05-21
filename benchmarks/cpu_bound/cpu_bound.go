@@ -7,18 +7,21 @@ import (
 	"flag"
 )
 
-var benchmarkName = *(flag.String("benchmark", "baseline", "which benchmark to run: valid benchmarks: baseline (default), channel-based, buffered-channel-based, shared-memory-based"))
-var NPROCS = *(flag.Int("nprocs", 1, "logical CPUs (default 1)"))
-
+var benchmarkName = flag.String("benchmark", "baseline", "which benchmark to run: valid benchmarks: baseline (default), channel-based, buffered-channel-based, shared-memory-based")
+var nprocs_flag = flag.Int("nprocs", 1, "logical CPUs (default 1)")
+var NPROCS int
 
 func main() {
+	flag.Parse()
+	NPROCS = *nprocs_flag
 	benchmarks := make(map[string]func(n uint64))
 	benchmarks["baseline"] = baselineCount
 	benchmarks["channel-based"] = channelBasedCount
 	benchmarks["buffered-channel-based"] = bufferedchannelBasedCount
 	benchmarks["shared-memory-based"] = sharedmemBasedCount
 
-	simpleBenchmark(benchmarkName, benchmarks[benchmarkName])
+	simpleBenchmark(*benchmarkName, benchmarks[*benchmarkName])
+	fmt.Println(benchmarkName)
 }
 
 func simpleBenchmark(name string, bench func(n uint64)) {
@@ -29,7 +32,6 @@ func simpleBenchmark(name string, bench func(n uint64)) {
 }
 
 func runBenchmarksWithNprocs(nprocs int) {
-	NPROCS = nprocs
 	simpleBenchmark("channel-based", channelBasedCount)
 	simpleBenchmark("buffered-channel-based", bufferedchannelBasedCount)
 	simpleBenchmark("shared-memory-based", sharedmemBasedCount)
