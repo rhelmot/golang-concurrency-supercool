@@ -1,14 +1,15 @@
 package main
 
 import (
-	"os"
 	"fmt"
 	"sync"
-	"strconv"
 	"golang.org/x/benchmarks/driver"
+	"flag"
 )
 
-var NPROCS int = 1
+var benchmarkName = *(flag.String("benchmark", "baseline", "which benchmark to run: valid benchmarks: baseline (default), channel-based, buffered-channel-based, shared-memory-based"))
+var NPROCS = *(flag.Int("nprocs", 1, "logical CPUs (default 1)"))
+
 
 func main() {
 	benchmarks := make(map[string]func(n uint64))
@@ -17,9 +18,7 @@ func main() {
 	benchmarks["buffered-channel-based"] = bufferedchannelBasedCount
 	benchmarks["shared-memory-based"] = sharedmemBasedCount
 
-	NPROCS, _ = strconv.Atoi(os.Args[1])
-	bench := benchmarks[os.Args[2]]
-	simpleBenchmark(os.Args[2], bench)
+	simpleBenchmark(benchmarkName, benchmarks[benchmarkName])
 }
 
 func simpleBenchmark(name string, bench func(n uint64)) {
