@@ -6,9 +6,18 @@ package main
 import (
 	"golang.org/x/benchmarks/driver"
 	"sync"
+	"flag"
 )
 
+var capacity_flag = flag.Int("channel_capacity", 1, "capacity of channel buffer (default 1)")
+var capacity int
+var data_size_flag = flag.Int("data_size", 1, "number of ints to pass through channels (default 2)")
+var data_size int
+
 func main() {
+	flag.Parse()
+	capacity = *capacity_flag
+	data_size = *data_size_flag
 	driver.Main("DataPipeline", benchmark)
 }
 
@@ -17,7 +26,7 @@ func benchmark() driver.Result {
 }
 
 func add1(input chan int) chan int {
-	output := make(chan int)
+	output := make(chan int, capacity)
 	go func(input chan int, output chan int){
 		for i := range input {
 			output <- i + 1
@@ -28,7 +37,7 @@ func add1(input chan int) chan int {
 }
 
 func subtract5(input chan int) chan int {
-	output := make(chan int)
+	output := make(chan int, capacity)
 	go func(input chan int, output chan int){
 		for i := range input {
 			output <- i - 5
@@ -39,7 +48,7 @@ func subtract5(input chan int) chan int {
 }
 
 func multiplyBy3(input chan int) chan int {
-	output := make(chan int)
+	output := make(chan int, capacity)
 	go func(input chan int, output chan int){
 		for i := range input {
 			output <- i * 3
@@ -58,7 +67,7 @@ func chainFuncNTimes(input chan int, n int, f func(input chan int) chan int) cha
 }
 
 func benchmarkN(n uint64) {
-	input := make(chan int)
+	input := make(chan int, capacity)
 
 	output := chainFuncNTimes(input, int(n), add1)
 
@@ -71,7 +80,7 @@ func benchmarkN(n uint64) {
 		defer wg.Done()
 	}()
 
-	for i := 0; i < 2; i++ {
+	for i := 0; i < data_size; i++ {
 		input <- i
 	}
 	close(input)
