@@ -12,16 +12,19 @@ import (
 
 var max_procs_flag = flag.Int("max_procs", runtime.NumCPU(), "maximum number of parallel logical cpus (default varies by machine)")
 var max_procs int
-var iterations_flag = flag.Int("iterations", 100000, "loop iterations per go routine (default 1000)")
+var iterations_flag = flag.Int("iterations", 1000000, "loop iterations per go routine (default 1000000)")
 var iterations int
-var time_on_max_procs_flag = flag.Int("time_on_max_procs", 4000, "The minimum time (in ms) that the benchmark should take to run on the maximum number of processors (default 4s)")
+var time_on_max_procs_flag = flag.Int("time_on_max_procs", 4000, "The minimum time (in ms) that the benchmark should take to run on the maximum number of processors (default 4000)")
 var time_on_max_procs int
+var max_goroutines_flag = flag.Int("max_goroutines", 1000000, "The maximum number of goroutines to launch (default 1000000)")
+var max_goroutines int
 
 func main() {
 	flag.Parse()
 	max_procs = *max_procs_flag
 	iterations = *iterations_flag
 	time_on_max_procs = *time_on_max_procs_flag
+	max_goroutines = *max_goroutines_flag
 	times := make(map[int]int64)
 
 	nRoutines := 100
@@ -29,7 +32,7 @@ func main() {
 	//Find a number of goroutines that take 4 seconds on max number
 	//of processors. This will make it easier to see changes in
 	//parallel efficiency.
-	for timeNGoRoutines(nRoutines, max_procs) / (1000 * 1000) < int64(time_on_max_procs)  {
+	for timeNGoRoutines(nRoutines, max_procs) / (1000 * 1000) < int64(time_on_max_procs) && nRoutines < max_goroutines  {
 		nRoutines *= 10
 	}
 
@@ -53,8 +56,8 @@ func timeNGoRoutines(n int, nprocs int) int64 {
 	var wg sync.WaitGroup
 
 	start := time.Now()
+	wg.Add(n)
 	for i := 0; i < n; i++ {
-		wg.Add(1)
 		go func(wg *sync.WaitGroup) {
 			defer wg.Done()
 
