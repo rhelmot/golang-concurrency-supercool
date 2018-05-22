@@ -5,9 +5,13 @@ package main
 import (
 	"flag"
 	"runtime"
+	"runtime/pprof"
 	"sync"
 	"time"
 	"fmt"
+	"log"
+	"os"
+	"strconv"
 )
 
 var max_procs_flag = flag.Int("max_procs", runtime.NumCPU(), "maximum number of parallel logical cpus (default varies by machine)")
@@ -39,6 +43,7 @@ func main() {
 	fmt.Println("About to launch", nRoutines, "goroutines")
 
 	for nprocs := 1; nprocs <= max_procs; nprocs++ {
+		runtime.GC()
 		times[nprocs] = timeNGoRoutines(nRoutines, nprocs)
 		fmt.Println(float64(times[nprocs]) / (1000.0 * 1000 * 1000))
 	}
@@ -47,13 +52,20 @@ func main() {
 	for nprocs := 1; nprocs <= max_procs; nprocs++ {
 		fmt.Println(nprocs," cores:", float64(times[1])/(float64(times[nprocs]) * float64(nprocs)))
 	}
-
-	//fmt.Println(float64(times) / (1000.0 * 1000 * 1000))
 }
 
 func timeNGoRoutines(n int, nprocs int) int64 {
 	runtime.GOMAXPROCS(nprocs)
 	var wg sync.WaitGroup
+
+	f, err := os.Create("parallel_efficiency-" + strconv.FormatInt(int64(nprocs), 10) + "-procs.pprof")
+    if err != nil {
+        log.Fatal("could not create CPU profile: ", err)
+    }
+    if err := pprof.StartCPUProfile(f); err != nil {
+        log.Fatal("could not start CPU profile: ", err)
+    }
+    defer pprof.StopCPUProfile()
 
 	start := time.Now()
 	wg.Add(n)

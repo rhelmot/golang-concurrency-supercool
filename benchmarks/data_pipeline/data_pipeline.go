@@ -9,6 +9,10 @@ import (
 	"fmt"
 	"time"
 	"runtime"
+	"runtime/pprof"
+	"log"
+	"os"
+	"strconv"
 )
 
 var capacity_flag = flag.Int("channel_capacity", 1, "capacity of channel buffer (default 1)")
@@ -29,6 +33,7 @@ func main() {
 	fmt.Println("ms per pipeline step:")
 	for pipelineLength := 10000; pipelineLength <= max_steps; pipelineLength += 10000 {
 		t := timePipeline(pipelineLength)
+		runtime.GC()
 		timePerStep := float64(t) / (1000 * 1000 * float64(pipelineLength))
 		fmt.Printf("%10d steps: %f\n", pipelineLength, timePerStep)
 	}
@@ -83,6 +88,16 @@ func timePipeline(n int) int64 {
 
 	var wg sync.WaitGroup
 	wg.Add(1)
+
+	f, err := os.Create("data_pipeline-" + strconv.FormatInt(int64(n), 10) + "-steps.pprof")
+    if err != nil {
+        log.Fatal("could not create CPU profile: ", err)
+    }
+    if err := pprof.StartCPUProfile(f); err != nil {
+        log.Fatal("could not start CPU profile: ", err)
+    }
+    defer pprof.StopCPUProfile()
+
 	start := time.Now()
 	go func(){
 		for i := range output {
