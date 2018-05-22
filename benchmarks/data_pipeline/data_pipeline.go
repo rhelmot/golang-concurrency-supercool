@@ -8,6 +8,7 @@ import (
 	"flag"
 	"fmt"
 	"time"
+	"runtime"
 )
 
 var capacity_flag = flag.Int("channel_capacity", 1, "capacity of channel buffer (default 1)")
@@ -16,17 +17,19 @@ var data_size_flag = flag.Int("data_size", 1, "number of ints to pass through ch
 var data_size int
 var max_steps_flag = flag.Int("max_steps", 100000, "maximum number of steps in the pipeline (default 100000)")
 var max_steps int
+var max_procs_flag = flag.Int("max_procs", runtime.NumCPU(), "maximum number of parallel logical cpus (default varies by machine)")
+var max_procs int
 
 func main() {
 	flag.Parse()
 	capacity = *capacity_flag
 	data_size = *data_size_flag
 	max_steps = *max_steps_flag
-	times := make(map[int]int64)
+	max_procs = *max_procs_flag
 	fmt.Println("ms per pipeline step:")
-	for pipelineLength := 100; pipelineLength <= max_steps; pipelineLength *= 2 {
-		times[pipelineLength] = timePipeline(pipelineLength)
-		timePerStep := float64(times[pipelineLength]) / (1000 * 1000 * float64(pipelineLength))
+	for pipelineLength := 10000; pipelineLength <= max_steps; pipelineLength += 10000 {
+		t := timePipeline(pipelineLength)
+		timePerStep := float64(t) / (1000 * 1000 * float64(pipelineLength))
 		fmt.Printf("%10d steps: %f\n", pipelineLength, timePerStep)
 	}
 }
@@ -73,6 +76,7 @@ func chainFuncNTimes(input chan int, n int, f func(input chan int) chan int) cha
 }
 
 func timePipeline(n int) int64 {
+	runtime.GOMAXPROCS(max_procs)
 	input := make(chan int, capacity)
 
 	output := chainFuncNTimes(input, int(n), add1)
