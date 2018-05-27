@@ -1,4 +1,5 @@
-//A simple benchmark for analyzing parallel efficiency
+//A benchmark for assessing the accuracy of timeouts when large
+//numbers of goroutines are running simultaneously
 
 package main
 
@@ -26,7 +27,8 @@ var n_steps_flag = flag.Int("n_steps", 5, "Number of steps (default 5)")
 var n_steps int
 var timeout_flag = flag.Int("timeout", 500, "Timeout length in ms (default 500)")
 var timeout int
-
+var manually_yeild_flag = flag.Bool("manually_yeild", false, "Instruct the extra goroutines to yeild the scheduler every 50 loop iterations")
+var manually_yeild bool
 
 func main() {
 	flag.Parse()
@@ -34,6 +36,7 @@ func main() {
 	iterations = *iterations_flag
 	step_size = *step_size_flag
 	timeout = *timeout_flag
+	manually_yeild = *manually_yeild_flag
 	times := make(map[int]int64)
 
 	nRoutines := *start_goroutines_flag
@@ -60,18 +63,7 @@ func benchmarkTimeout(n int, nprocs int) int64 {
 	}
 	defer pprof.StopCPUProfile()
 
-	wg.Add(n + 1)
-	for i := 0; i < n; i++ {
-		go func(wg *sync.WaitGroup) {
-			defer wg.Done()
-
-			var j int
-			for k := 0; k < iterations; k++ {
-				j++
-			}
-		}(&wg)
-	}
-
+	wg.Add(1)
 	go func(wg *sync.WaitGroup) {
 		defer wg.Done()
 		startTimeout := time.Now()
@@ -83,6 +75,18 @@ func benchmarkTimeout(n int, nprocs int) int64 {
 
 		timeoutResult = time.Since(startTimeout).Nanoseconds()
 	}(&wg)
+
+	for i := 0; i < n; i++ {
+		go func() {
+			var j int
+			for k := 0; k < iterations; k++ {
+				j++
+				if (manually_yeild && k%50 == 0) {
+					runtime.Gosched()
+				}
+			}
+		}()
+	}
 
 	wg.Wait()
 
