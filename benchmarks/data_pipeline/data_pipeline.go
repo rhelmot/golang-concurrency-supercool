@@ -19,7 +19,7 @@ var capacity_flag = flag.Int("channel_capacity", 1, "capacity of channel buffer 
 var capacity int
 var data_size_flag = flag.Int("data_size", 1, "number of ints to pass through channels (default 2)")
 var data_size int
-var max_steps_flag = flag.Int("max_steps", 100000, "maximum number of steps in the pipeline (default 100000)")
+var max_steps_flag = flag.Int("max_steps", 80000, "maximum number of steps in the pipeline (default 100000)")
 var max_steps int
 var max_procs_flag = flag.Int("max_procs", runtime.NumCPU(), "maximum number of parallel logical cpus (default varies by machine)")
 var max_procs int

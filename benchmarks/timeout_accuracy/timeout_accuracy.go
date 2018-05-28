@@ -19,11 +19,11 @@ var max_procs_flag = flag.Int("max_procs", runtime.NumCPU(), "maximum number of 
 var max_procs int
 var iterations_flag = flag.Int("iterations", 1000000, "loop iterations per go routine (default 1000000)")
 var iterations int
-var start_goroutines_flag = flag.Int("start_goroutines", 100, "The initial number of goroutines to launch (default 100)")
+var start_goroutines_flag = flag.Int("start_goroutines", 1000, "The initial number of goroutines to launch (default 1000)")
 var start_goroutines int
-var step_size_flag = flag.Int("step_size", 10, "Multiplicative increase in goroutines at every step (default 10)")
+var step_size_flag = flag.Int("step_size", 2, "Multiplicative increase in goroutines at every step (default 10)")
 var step_size int
-var n_steps_flag = flag.Int("n_steps", 5, "Number of steps (default 5)")
+var n_steps_flag = flag.Int("n_steps", 5, "Number of steps (default 2)")
 var n_steps int
 var timeout_flag = flag.Int("timeout", 500, "Timeout length in ms (default 500)")
 var timeout int

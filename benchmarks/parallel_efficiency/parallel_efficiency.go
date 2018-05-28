@@ -18,9 +18,9 @@ var max_procs_flag = flag.Int("max_procs", runtime.NumCPU(), "maximum number of 
 var max_procs int
 var iterations_flag = flag.Int("iterations", 1000000, "loop iterations per go routine (default 1000000)")
 var iterations int
-var time_on_max_procs_flag = flag.Int("time_on_max_procs", 4000, "The minimum time (in ms) that the benchmark should take to run on the maximum number of processors (default 4000)")
+var time_on_max_procs_flag = flag.Int("time_on_max_procs", 1000, "The minimum time (in ms) that the benchmark should take to run on the maximum number of processors (default 1000)")
 var time_on_max_procs int
-var max_goroutines_flag = flag.Int("max_goroutines", 1000000, "The maximum number of goroutines to launch (default 1000000)")
+var max_goroutines_flag = flag.Int("max_goroutines", 500000, "The maximum number of goroutines to launch (default 1000000)")
 var max_goroutines int
 
 func main() {
